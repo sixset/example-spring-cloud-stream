@@ -1,0 +1,31 @@
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: ''
+    password: ''
+    virtual-host:
+
+  cloud:
+    stream:
+      bindings:
+        # Defines a specific binding for your application
+        incoming-events-stream-consumer:
+          destination: incoming-events
+          group: devset
+        events-stream-producer:
+          destination: incoming-events
+          group: devset
+      rabbit:
+        bindings:
+          incoming-events-stream-consumer: # RabbitMQ-specific configuration for the binding defined above
+            consumer:
+              bindQueue: true
+              bindingRoutingKey: '#' # The routing key to use for the binding; empty means all messages are received
+          events-stream-producer:
+            producer:
+              exchangeType: topic
+      function:
+        bindings:
+          consumeEvent-in-0: incoming-events-stream-consumer
+
